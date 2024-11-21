@@ -7,6 +7,8 @@ const tweetRoutes = require('./routes/tweetRoutes');
 const userRoutes = require('./routes/userRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const cors = require("cors");
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 dotenv.config();
 const app = express();
@@ -19,6 +21,7 @@ app.use('/api/tweets', tweetRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/chat', chatRoutes);
+app.use(cors());
 
 // Conectar ao MongoDB
 mongoose.connect(process.env.MONGODB_URI, {

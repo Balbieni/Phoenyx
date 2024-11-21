@@ -1,6 +1,7 @@
 // conexão com MongoDB
-
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const mongoose = require('mongoose');
+const uri="mongodb+srv://phoenyxprojeto:bC4kjS2T6M7NzMZK@phoenyx.yax5l.mongodb.net/?retryWrites=true&w=majority&appName=Phoenyx"
 
 const connectDB = async () => {
   try {
