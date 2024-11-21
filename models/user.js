@@ -1,14 +1,13 @@
-// models/User.js
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  bio: { type: String, maxlength: 160 },
-  profileImage: { type: String },
-  followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  mutedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-}, { timestamps: true });
+  bio: { type: String },
+});
 
-module.exports = mongoose.model('User', UserSchema);
+// Verifica se o modelo já foi registrado
+const User = mongoose.models.User || mongoose.model('User', UserSchema);
+
+module.exports = User;
