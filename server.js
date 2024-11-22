@@ -5,22 +5,20 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+
+// Middleware de autenticação
+const authMiddleware = require('./middleware/authMiddleware');
+
+// Rotas principais
+const routes = require('./routes/routes');
+const User = require('./models/models');
+
 // Configuração do dotenv para variáveis de ambiente
 dotenv.config();
 
 const app = express();
-app.use(cors()); // Middleware de CORS
+app.use(cors()); // Middleware para habilitar CORS
 app.use(express.json()); // Middleware para processar JSON no corpo das requisições
-
-// Modelo de Usuário
-const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  bio: { type: String },
-});
-
-const User = mongoose.model('User', UserSchema);
 
 // Conexão ao MongoDB
 mongoose
@@ -28,10 +26,11 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('MongoDB conectado com sucesso'))
-  .catch((err) => console.log('Erro ao conectar ao MongoDB:', err));
+  .then(() => console.log('✅ MongoDB conectado com sucesso!'))
+  .catch((err) => console.error('❌ Erro ao conectar ao MongoDB:', err.message));
 
-// Rotas de Autenticação
+// Rotas Modulares
+app.use('/api', routes); // Usa as rotas definidas no arquivo routes.js
 
 // Registrar novo usuário
 app.post('/api/auth/register', async (req, res) => {
@@ -81,17 +80,15 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // Rotas Modulares
-// Outros arquivos de rotas são mantidos modularizados
-const tweetRoutes = require('./routes/tweetRoutes');
-const userRoutes = require('./routes/userRoutes');
-const commentRoutes = require('./routes/commentRoutes');
-const chatRoutes = require('./routes/chatRoutes');
+app.use('/api', routes);
 
-app.use('/api/tweets', tweetRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/comments', commentRoutes);
-app.use('/api/chat', chatRoutes);
+// Endpoint padrão para testar o servidor
+app.get('/', (req, res) => {
+  res.send('🚀 API rodando! Bem-vindo ao servidor.');
+});
 
-// Inicializar o servidor
+// Inicialização do servidor
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`⚡ Servidor rodando na porta ${PORT}`);
+});
